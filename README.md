@@ -30,7 +30,7 @@ git submodule update --init --recursive
 
 ## How syncing works
 
-Daily work (code, PRs, issues) happens in `examind-fe` / `examind-be`, never here. CI also lives in the service repos (GitHub Actions test + build in each); this meta-repo has no CI of its own.
+Daily work (code, PRs, issues) happens in `examind-fe` / `examind-be`, never here. CI also lives in the service repos (GitHub Actions: build check in the frontend, pytest in the backend); this meta-repo has no CI of its own.
 
 This repo only records which commit of each service is current. After any push to `examind-fe` or `examind-be`, the pointers here must be synced:
 
