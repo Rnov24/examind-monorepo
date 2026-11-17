@@ -1,31 +1,38 @@
 # examind-monorepo — EXAMIND Platform
 
-> Meta-repo for the EXAMIND AI-Powered Online Examination Platform (Sistem Ujian Online Berbasis AI).
-> This repo contains no code itself — it pins the two service repos as git submodules.
+> Meta-repo for the EXAMIND AI-powered online examination platform (Sistem Ujian Online Berbasis AI).
+> This repo contains no code of its own. It pins the two service repos as git submodules, so one clone gives you the whole platform at a known pair of commits.
 
-| Submodule | Repo | Isi |
-|-----------|------|-----|
-| `frontend/` | [Rnov24/examind-fe](https://github.com/Rnov24/examind-fe) | Vue 3 + Vite + TS (rencana migrasi ke Next.js: lihat `frontend/docs/plans/`) |
-| `backend/` | [Rnov24/examind-be](https://github.com/Rnov24/examind-be) | FastAPI + MySQL |
+## Submodules
 
-## Download semuanya dalam satu command
+| Submodule | Repo | Stack | What it holds |
+|-----------|------|-------|---------------|
+| `frontend/` | [Rnov24/examind-fe](https://github.com/Rnov24/examind-fe) | Next.js 15 + React 19 + TypeScript 5.7, pnpm, Tailwind 3.4, MediaPipe on-device proctoring | Web app: exams, proctoring, grading workspace, admin |
+| `backend/` | [Rnov24/examind-be](https://github.com/Rnov24/examind-be) | FastAPI + SQLAlchemy 2.0 + PyMySQL against TiDB Cloud (Singapore), deployed on Modal; LLM adapters + Respan essay grader | API: auth, exams, sessions, grading, AI grading |
+
+## Live
+
+- App: https://examind.rijal.work
+- API (edge): https://examind-api.rijal.work
+- API (Modal, direct): https://rnov24--examind-be-api.us-east.modal.run
+
+## Clone
 
 ```bash
 git clone --recurse-submodules https://github.com/Rnov24/examind-monorepo.git
 ```
 
-Sudah pernah clone tapi lupa `--recurse-submodules`? Perbaiki dengan:
+Cloned without submodules? Fix it with:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-## Cara kerja
+## How syncing works
 
-- Kerja harian (ngoding, PR, issue) dilakukan di `examind-fe` / `examind-be`
-  masing-masing — bukan di sini.
-- Repo ini hanya menunjuk ke commit tertentu dari kedua repo itu
-  (lihat `.gitmodules`). Untuk menarik versi terbaru kedua service:
+Daily work (code, PRs, issues) happens in `examind-fe` / `examind-be`, never here. CI also lives in the service repos (GitHub Actions test + build in each); this meta-repo has no CI of its own.
+
+This repo only records which commit of each service is current. After any push to `examind-fe` or `examind-be`, the pointers here must be synced:
 
 ```bash
 git submodule update --remote --merge
@@ -34,8 +41,14 @@ git commit -m "chore: bump submodules ke versi terbaru"
 git push
 ```
 
-## Menjalankan lokal
+To run the app locally, go into each submodule and follow its own README. Do not treat either repo as production on localhost; production is the live links above.
 
-Masuk ke masing-masing submodule dan ikuti README-nya, atau dari Windows
-jalankan `frontend/scripts/start_examind.bat` (butuh kedua repo bersebelahan,
-yang otomatis terpenuhi oleh struktur submodule ini).
+## Repo map
+
+```
+examind-monorepo/
+├── README.md          # this file
+├── .gitmodules        # submodule URLs (frontend, backend)
+├── frontend/          # submodule → Rnov24/examind-fe
+└── backend/           # submodule → Rnov24/examind-be
+```
